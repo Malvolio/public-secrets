@@ -18,7 +18,7 @@ The local tools run without an application server and make no network requests a
 
 Generate a key first using the instructions below. Post your public key and a link to this repo together:
 
-> You can send me your email address privately using this repo: https://github.com/malvoliosf/public-secrets. My public key is PUBLIC_KEY. Follow its setup and sender instructions, then reply here with the encrypted output. Keep your original message private.
+> You can send me your email address privately using this repo: https://github.com/Malvolio/public-secrets. My public key is PUBLIC_KEY. Follow its setup and sender instructions, then reply here with the encrypted output. Keep your original message private.
 
 Replace `PUBLIC_KEY` with the printed public key. The other person encrypts their address locally and posts the output. You decrypt their reply locally. This needs **two public posts**: your key and invitation, then their encrypted reply.
 
@@ -26,7 +26,7 @@ Replace `PUBLIC_KEY` with the printed public key. The other person encrypts thei
 
 If the other person has not already published a key, first ask them to create one:
 
-> I'd like to send you my email address privately. This repo explains how: https://github.com/malvoliosf/public-secrets. Please follow its setup and recipient instructions, then reply here with your public key. Keep the private-key file to yourself. I'll encrypt my address for your public key and post the encrypted reply here.
+> I'd like to send you my email address privately. This repo explains how: https://github.com/Malvolio/public-secrets. Please follow its setup and recipient instructions, then reply here with your public key. Keep the private-key file to yourself. I'll encrypt my address for your public key and post the encrypted reply here.
 
 After they post their public key, copy it from their actual account, encrypt your address locally, and post the encrypted output. They decrypt it locally. This needs **three public posts**: your request, their key, then your encrypted reply. If they already published a suitable key, you can encrypt to it immediately.
 
