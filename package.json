@@ -1,0 +1,26 @@
+{
+  "name": "public-secrets",
+  "version": "1.0.0",
+  "description": "Inspectable local secret exchange with interoperable Python and Effect TypeScript implementations",
+  "scripts": {
+    "test": "python -m unittest discover -s tests -v",
+    "typecheck": "tsc",
+    "secret": "node --import tsx typescript/cli.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "type": "module",
+  "dependencies": {
+    "@effect/platform-node": "4.1.1",
+    "effect": "4.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.6",
+    "tsx": "4.23.15",
+    "typescript": "7.0.2"
+  },
+  "private": true,
+  "engines": {
+    "node": ">=22.19.0"
+  }
+}

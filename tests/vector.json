@@ -1,0 +1,8 @@
+{
+  "description": "Public test material only; never use these fixed keys or nonce for real secrets.",
+  "privateKeyHex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+  "ephemeralPrivateKeyHex": "202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f",
+  "nonceHex": "000102030405060708090a0b",
+  "plaintext": "hello@example.com — 秘密",
+  "packet": "eyJlcGsiOiJOWUJ5MWpaWWdOR3U2akthMzVFaE9EaFI3U0dpamp0MTZXWFEwczBXWWxRPSIsIm5vbmNlIjoiQUFFQ0F3UUZCZ2NJQ1FvTCIsImN0IjoiX09BWVhZNXdVZG53d09laEhNSlRuU0ZfMEtDMnhmdEtNUVRONm5yQXNsSEJyYlVsUGV3UmJyUndQR0E9In0="
+}
