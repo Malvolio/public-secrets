@@ -82,18 +82,18 @@ It also creates `private.key` in your current folder. **Keep this file private. 
 
 ## Sender: encrypt your secret
 
-Use a local text editor to create a UTF-8 file named `message.txt` containing your email address or other short message. Replace `PUBLIC_KEY` below with the recipient's public key, keeping the quotes. Run **only the command for your chosen language**.
+Use a local text editor to create a UTF-8 file named `message.txt` containing your email address or other short message. Replace `PUBLIC_KEY` below with the recipient's public key, keeping the quotes. Run **only the command for your chosen language**. Keep the `--` separator: it prevents a public key beginning with `-` from being read as an option.
 
 **Python:**
 
 ```sh
-python python/secret_exchange.py encrypt "PUBLIC_KEY" --message-file message.txt
+python python/secret_exchange.py encrypt --message-file message.txt -- "PUBLIC_KEY"
 ```
 
 **TypeScript:**
 
 ```sh
-npm run --silent secret -- encrypt "PUBLIC_KEY" --message-file message.txt
+npm run --silent secret -- encrypt --message-file message.txt -- "PUBLIC_KEY"
 ```
 
 Post the entire printed line as your public reply. **Do not post the original text file.** Reading the secret from a file keeps it out of command history and process arguments. The local file still contains the secret; store or remove it according to your needs.
@@ -105,16 +105,16 @@ Replace `ENCRYPTED_MESSAGE` with the entire encrypted reply. In the folder conta
 **Python:**
 
 ```sh
-python python/secret_exchange.py decrypt "ENCRYPTED_MESSAGE"
+python python/secret_exchange.py decrypt -- "ENCRYPTED_MESSAGE"
 ```
 
 **TypeScript:**
 
 ```sh
-npm run --silent secret -- decrypt "ENCRYPTED_MESSAGE"
+npm run --silent secret -- decrypt -- "ENCRYPTED_MESSAGE"
 ```
 
-The secret appears in your terminal. If you chose another key filename, add `--key another-private.key`. Keep terminal output private too.
+The secret appears in your terminal. If you chose another key filename, put `--key another-private.key` before `--`. Keep terminal output private too.
 
 ## How the encryption works
 

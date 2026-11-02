@@ -54,10 +54,30 @@ class InteroperabilityTests(unittest.TestCase):
                     with self.subTest(recipient=recipient, sender=sender, message=message):
                         file = self.work / "message.txt"
                         file.write_bytes(message.encode("utf-8"))
-                        packet = self.run_cli(sender, "encrypt", public, "--message-file", str(file))
+                        packet = self.run_cli(sender, "encrypt", "--message-file", str(file), "--", public)
                         self.assertEqual(
-                            self.run_cli(recipient, "decrypt", packet, "--key", str(key)), message
+                            self.run_cli(recipient, "decrypt", "--key", str(key), "--", packet), message
                         )
+
+    def test_public_key_starting_with_hyphen(self):
+        # Public test material only: this key reliably exercises option parsing.
+        private = bytes.fromhex("3802000000000000000000000000000000000000000000000000000000000000")
+        public = protocol.encode(
+            protocol.X25519PrivateKey.from_private_bytes(private).public_key().public_bytes_raw()
+        )
+        self.assertTrue(public.startswith("-"))
+        key = self.work / "hyphen.key"
+        key.write_bytes(private)
+        file = self.work / "message.txt"
+        file.write_text("hyphen key")
+        for sender in ("python", "typescript"):
+            packet = self.run_cli(sender, "encrypt", "--message-file", str(file), "--", public)
+            for recipient in ("python", "typescript"):
+                with self.subTest(sender=sender, recipient=recipient):
+                    self.assertEqual(
+                        self.run_cli(recipient, "decrypt", "--key", str(key), "--", packet),
+                        "hyphen key",
+                    )
 
     def test_fixed_protocol_vector(self):
         vector = json.loads((ROOT / "tests/vector.json").read_text())
@@ -65,7 +85,7 @@ class InteroperabilityTests(unittest.TestCase):
         key.write_bytes(bytes.fromhex(vector["privateKeyHex"]))
         for language in ("python", "typescript"):
             with self.subTest(language=language):
-                self.assertEqual(self.run_cli(language, "decrypt", vector["packet"], "--key", str(key)), vector["plaintext"])
+                self.assertEqual(self.run_cli(language, "decrypt", "--key", str(key), "--", vector["packet"]), vector["plaintext"])
 
     def test_rejects_wrong_keys_tampering_and_malformed_packets(self):
         private, public = protocol.generate_keys()
@@ -88,19 +108,19 @@ class InteroperabilityTests(unittest.TestCase):
         for language in ("python", "typescript"):
             for index, packet in enumerate(cases):
                 with self.subTest(language=language, case=index):
-                    self.run_cli(language, "decrypt", packet, "--key", str(key), succeeds=False)
+                    self.run_cli(language, "decrypt", "--key", str(key), "--", packet, succeeds=False)
 
     def test_encryption_is_fresh_and_invalid_public_keys_fail(self):
         _, public = protocol.generate_keys()
         file = self.work / "message.txt"
         file.write_text("same message")
         for language in ("python", "typescript"):
-            a = self.run_cli(language, "encrypt", public, "--message-file", str(file))
-            b = self.run_cli(language, "encrypt", public, "--message-file", str(file))
+            a = self.run_cli(language, "encrypt", "--message-file", str(file), "--", public)
+            b = self.run_cli(language, "encrypt", "--message-file", str(file), "--", public)
             self.assertNotEqual(a, b)
             self.assertNotEqual(json.loads(protocol.decode(a))["epk"], json.loads(protocol.decode(b))["epk"])
             for bad in ("!", protocol.encode(b"short"), protocol.encode(bytes(32))):
-                self.run_cli(language, "encrypt", bad, "--message-file", str(file), succeeds=False)
+                self.run_cli(language, "encrypt", "--message-file", str(file), "--", bad, succeeds=False)
 
     def test_rejects_invalid_utf8_at_each_boundary(self):
         private, public = protocol.generate_keys()
@@ -124,9 +144,9 @@ class InteroperabilityTests(unittest.TestCase):
             )
             for language in ("python", "typescript"):
                 with self.subTest(language=language, invalid=invalid.hex()):
-                    self.run_cli(language, "encrypt", public, "--message-file", str(message), succeeds=False)
-                    self.run_cli(language, "decrypt", packet, "--key", str(key), succeeds=False)
-                    self.run_cli(language, "decrypt", invalid_json_utf8, "--key", str(key), succeeds=False)
+                    self.run_cli(language, "encrypt", "--message-file", str(message), "--", public, succeeds=False)
+                    self.run_cli(language, "decrypt", "--key", str(key), "--", packet, succeeds=False)
+                    self.run_cli(language, "decrypt", "--key", str(key), "--", invalid_json_utf8, succeeds=False)
 
 
 if __name__ == "__main__":
