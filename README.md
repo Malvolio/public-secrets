@@ -2,7 +2,11 @@
 
 Exchange a private contact address through a public comment thread. One person posts a public key; the other posts an encrypted message. Only the holder of the private key can decrypt it.
 
-Choose **local Python**, **local TypeScript**, or the optional **LLM-assisted route**. All use the same protocol, so participants can choose different routes.
+## Choose your language
+
+**You only need one language: Python or TypeScript. The choice is up to each user.** Choose whichever you prefer, follow only its setup instructions, and use only its commands below. You do not need to install or run both.
+
+Participants can choose independently: one person can use Python while the other uses TypeScript. Both use the same protocol. The optional **LLM-assisted route** also uses that protocol.
 
 | Your preference | Start here | Where secrets are processed |
 | --- | --- | --- |
@@ -34,7 +38,7 @@ The recipient generates the key, keeps the private-key file, and publishes only 
 
 ## Set up once
 
-Download this repository using GitHub's **Code → Download ZIP**, extract it, and open a terminal in the extracted folder. Or clone it with Git. Choose one implementation below.
+Download this repository using GitHub's **Code → Download ZIP**, extract it, and open a terminal in the extracted folder. Or clone it with Git. Complete **only one** of the two setup sections below, according to your choice.
 
 ### Python
 
@@ -58,11 +62,15 @@ npm ci
 
 ## Recipient: create a key
 
-Run **one** of these:
+Run **only the command for your chosen language**:
+
+**Python:**
 
 ```sh
 python python/secret_exchange.py keygen
 ```
+
+**TypeScript:**
 
 ```sh
 npm run --silent secret -- keygen
@@ -74,11 +82,15 @@ It also creates `private.key` in your current folder. **Keep this file private. 
 
 ## Sender: encrypt your secret
 
-Use a local text editor to create a UTF-8 file named `message.txt` containing your email address or other short message. Replace `PUBLIC_KEY` below with the recipient's public key, keeping the quotes.
+Use a local text editor to create a UTF-8 file named `message.txt` containing your email address or other short message. Replace `PUBLIC_KEY` below with the recipient's public key, keeping the quotes. Run **only the command for your chosen language**.
+
+**Python:**
 
 ```sh
 python python/secret_exchange.py encrypt "PUBLIC_KEY" --message-file message.txt
 ```
+
+**TypeScript:**
 
 ```sh
 npm run --silent secret -- encrypt "PUBLIC_KEY" --message-file message.txt
@@ -88,11 +100,15 @@ Post the entire printed line as your public reply. **Do not post the original te
 
 ## Recipient: decrypt the reply
 
-Replace `ENCRYPTED_MESSAGE` with the entire encrypted reply. Run in the folder containing your private key:
+Replace `ENCRYPTED_MESSAGE` with the entire encrypted reply. In the folder containing your private key, run **only the command for your chosen language**:
+
+**Python:**
 
 ```sh
 python python/secret_exchange.py decrypt "ENCRYPTED_MESSAGE"
 ```
+
+**TypeScript:**
 
 ```sh
 npm run --silent secret -- decrypt "ENCRYPTED_MESSAGE"
@@ -110,7 +126,7 @@ See [PROTOCOL.md](PROTOCOL.md) for the exact format and algorithms.
 
 ## What you are trusting
 
-Read [the Python implementation](python/secret_exchange.py) or [the TypeScript protocol](typescript/protocol.ts) and [CLI](typescript/cli.ts). The visible flow is: load a key, use library crypto, encode or decode a packet, print the result. There are no network clients, analytics, accounts, application servers, or custom encryption primitives. Dependency installation does contact package registries. You still trust your computer, runtime, installed dependencies, and the source you run.
+Read [the Python code](python/secret_exchange.py) or [the TypeScript protocol](typescript/protocol.ts) and [CLI](typescript/cli.ts). The visible flow is: load a key, use library crypto, encode or decode a packet, print the result. There are no network clients, analytics, accounts, application servers, or custom encryption primitives. Dependency installation does contact package registries. You still trust your computer, runtime, installed dependencies, and the source you run.
 
 - **Verify the public key's source.** Encryption does not establish identity. Use the intended person's actual account; a substituted key lets its owner read what you encrypt.
 - **Anyone can encrypt to a public key.** Successful decryption authenticates the ciphertext's integrity, not the sender's identity. Replies and later emails can be impersonated; verify identities separately when needed.
@@ -132,3 +148,7 @@ python -m unittest discover -s tests -v
 ```
 
 The suite runs the actual CLIs in both directions and in each language, including empty and Unicode messages, mixed line endings, and a leading byte-order mark. It checks a fixed public test vector, tampering, malformed packets, invalid UTF-8, invalid public keys, wrong recipient keys, fresh encryption, key permissions, and refusal to overwrite keys. The tests use temporary files and need no network access.
+
+## Support this project
+
+If you find this project useful, you can [buy me a coffee](https://buymeacoffee.com/michaellorton).
